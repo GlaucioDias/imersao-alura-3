@@ -22,12 +22,16 @@ function ProfileSidebar(props) {
 }
 
 export default function Home() {
-  
+
   const gitHubUser = 'glauciodias'
-  const [comunidades, setComunidades] = useState(['Alurakut'])
-
-  console.log('teste', comunidades)
-
+  const [comunidades, setComunidades] = useState([
+    {
+      id: 56765782465823723237523,
+      title: 'Eu odeio acordar cedo',
+      image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
+    }
+  ])
+  
   const pessoasFavoritas = [
     'juunegreiros',
     'omariosouto',
@@ -39,7 +43,7 @@ export default function Home() {
 
   return (
     <>
-      <AlurakutMenu />
+      <AlurakutMenu githubUser={gitHubUser}/>
       <MainGrid>
         <div className="profileArea" style={{ gridArea: 'profileArea' }}>
           <ProfileSidebar githubUser={gitHubUser} />
@@ -53,8 +57,16 @@ export default function Home() {
             <h2>O que você deseja fazer</h2>
             <form onSubmit={function handleCriaComunidade(e) {
               e.preventDefault()
+
+              const dadosDoForm = new FormData(e.target);
               
-              const comunidadesAtualizadas = [...comunidades, 'Alura Stars']
+              const comunidade = {
+                id: new Date().toISOString(),
+                title: dadosDoForm.get('title'),
+                image: dadosDoForm.get('image'),
+              }
+
+              const comunidadesAtualizadas = [...comunidades, comunidade]
               setComunidades(comunidadesAtualizadas)
             }}>
               <input
@@ -76,17 +88,17 @@ export default function Home() {
           </Box>
         </div>
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
-        <ProfileRelationsBoxWrapper>
+          <ProfileRelationsBoxWrapper>
             <h2 className='smallTitle'>
               Comunidades ({comunidades.length})
             </h2>
             <ul>
-              {comunidades.map((itemAtual, i) => {
+              {comunidades.map((itemAtual) => {
                 return (
-                  <li key={i}>
-                    <a href={`/users/${itemAtual}`}>
-                      <img src='https://via.placeholder.com/300' />
-                    <span>{itemAtual}</span>
+                  <li key={itemAtual.id}>
+                    <a href={`/users/${itemAtual.title}`}>
+                      <img src={itemAtual.image} />
+                      <span>{itemAtual.title}</span>
 
                     </a>
                   </li>
